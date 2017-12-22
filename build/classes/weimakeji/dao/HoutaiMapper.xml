@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="weimakeji.dao.HoutaiMapper">
+  
+  
+  <select id="login" parameterType="String" resultType="weimakeji.pojo.User">
+     select * from user where username=#{0} and password=#{1}
+  </select>
+
+
+
+<update id="updatPassword" parameterType="weimakeji.pojo.User">
+   update user set password=${newpass} where username = #{username}
+</update>
+
+
+<insert id="addCustomer" parameterType="weimakeji.pojo.Customer">
+  insert into customer (custName,custLevel,custSource,custPhone,custMobile,custEmail)values(#{custName},#{custLevel},#{custSource},#{custPhone},#{custMobile},#{custEmail})
+</insert>
+
+<select id="findCustomer" resultType="weimakeji.pojo.Customer">
+  select * from customer
+</select>
+
+
+
+<select id="findPage" parameterType="weimakeji.pojo.PageBean" resultType="weimakeji.pojo.Customer">
+  select *from customer limit #{begin},#{pageSize}
+</select>
+<select id="findCount" resultType="int">
+select count(*) from customer
+</select>
+
+
+
+
+
+<delete id="delCustomer" parameterType="java.lang.Integer">
+delete from customer where cid =#{cid}
+
+</delete>
+
+<select id="findCustomerById" parameterType="java.lang.Integer" resultType="weimakeji.pojo.Customer">
+
+  select * from customer where cid=#{cid}
+</select>
+
+<update id="updateCustomer" parameterType="weimakeji.pojo.Customer">
+   update customer  
+	 <set>
+	 <if test="custName != null and  custName != ''">
+	 custName=#{custName} ,
+	 </if>
+	 <if test="custLevel !=null and custLevel != ''">
+	 custLevel=#{custLevel} ,
+	 </if>
+	 <if test="custSource !=null and custSource != ''">
+	 custSource=#{custSource} ,
+	 </if>
+	  <if test="custPhone !=null and custPhone != ''">
+	 custPhone=#{custPhone} ,
+	 </if>
+	  <if test="custMobile !=null and custMobile != ''">
+	 custMobile=#{custMobile} ,
+	 </if>
+	  <if test="custEmail !=null and custEmail != ''">
+	 custEmail=#{custEmail} ,
+	 </if>
+	 </set>
+	 where cid=#{cid}
+   </update>
+   
+   
+  <select id="customerScreen" parameterType="java.lang.String" resultType="weimakeji.pojo.Customer">
+    select * from customer where custName like '%${custName}%';
+  </select>
+   
+   
+  <insert id="addLinkMan" parameterType="weimakeji.pojo.LinkMan">
+  insert into linkman (lkmName,lkmGender,lkmPhone,lkmMobile,clid)values(#{lkmName},#{lkmGender},#{lkmPhone},#{lkmMobile},#{clid})
+  </insert>
+   
+   <select id="findLinkMan" resultType="weimakeji.pojo.QueryVo">
+  select * from linkman ,customer  where linkman.clid=customer.cid;
+   </select>
+   
+   <select id="findLinkManById" parameterType="java.lang.Integer" resultType="weimakeji.pojo.QueryVo" >
+    select * from linkman where linkid=#{linkid}
+   </select>
+   
+   <update id="updateLinkMan" parameterType="weimakeji.pojo.QueryVo">
+      update linkman 
+	 <set>
+	   <if test="clid !=null and clid != ''">
+	 clid=#{clid} ,
+	 </if>
+	 <if test="lkmName != null and  lkmName != ''">
+	 lkmName=#{lkmName} ,
+	 </if>
+	 <if test="lkmGender !=null and lkmGender  != ''">
+	 lkmGender =#{lkmGender } ,
+	 </if>
+	 <if test="lkmPhone !=null and lkmPhone != ''">
+	 lkmPhone=#{lkmPhone} ,
+	 </if>
+	  <if test="lkmMobile !=null and lkmMobile != ''">
+	 lkmMobile=#{lkmMobile} ,
+	 </if>
+	
+	 </set>
+	 where linkid=#{linkid}
+   </update>
+   
+   <delete id="deleteLinkMan" parameterType="int">
+    delete from linkman where linkid =#{linkid}
+   </delete>
+   
+   <select id="linkManScreen" parameterType="java.lang.String" resultType="weimakeji.pojo.QueryVo">
+    select * from linkman,customer where linkman.clid=customer.cid And lkmName like '%${lkmName}%';
+   </select>
+   
+   <select id="findUser" resultType="weimakeji.pojo.User">
+   select * from user
+   </select>
+   
+   <insert id="addVisit" parameterType="weimakeji.pojo.Visit">
+     insert into visit (vaddress,vcontent,vuid,vcid,vtime)values(#{vaddress},#{vcontent},#{vuid},#{vcid},#{vtime})
+   </insert>
+   
+   <select id="findVisit" resultType="weimakeji.pojo.VisitList">
+   select * from visit ,customer,user where visit.vuid=user.userid and visit.vcid=customer.cid
+   </select>
+   
+   <delete id="delVisit" parameterType="java.lang.Integer">
+    delete from visit where vid=#{vid}
+   </delete>
+   
+   <select id="findVisitById" parameterType="java.lang.Integer" resultType="weimakeji.pojo.VisitList">
+   select * from visit, customer, user where visit.vuid=user.userid and visit.vcid=customer.cid and vid=#{vid};
+   </select>
+   
+   <update id="updateVisit" parameterType="weimakeji.pojo.VisitList">
+     update visit
+	 <set>
+	   <if test="vaddress !=null and vaddress != ''">
+	 vaddress=#{vaddress} ,
+	 </if>
+	 <if test="vcontent != null and  vcontent != ''">
+	 vcontent=#{vcontent} ,
+	 </if>
+	 <if test="vuid!=null and vuid  != ''">
+	 vuid =#{vuid } ,
+	 </if>
+	 <if test="vcid!=null and vcid != ''">
+	 vcid=#{vcid} ,
+	 </if>	
+	 <if test="vtime!=null and vtime != ''">
+	 vtime=#{vtime} ,
+	 </if>
+	   
+	 </set>
+	 where vid=#{vid}
+   </update>
+   
+   <select id="selectCustomer" parameterType="weimakeji.pojo.Customer" resultType="weimakeji.pojo.Customer">
+     select * from customer
+     <where>
+      <if test="custName != null and custName != ''">
+      AND custName LIKE '%${custName}%'
+            </if>
+            
+       <if test="custLevel != null and custLevel != ''">
+      AND custLevel LIKE '%${custLevel}%'
+            </if>     
+         
+         <if test="custSource != null and custSource != ''">
+      AND custSource LIKE '%${custSource}%'
+            </if>              
+     </where>
+   </select>
+   
+   <select id="selectLinkMan" parameterType="weimakeji.pojo.QueryVo" resultType="weimakeji.pojo.QueryVo">
+    select * from linkman,customer   
+    <where>
+     linkman.clid=customer.cid
+   <if test="lkmName != null and lkmName != ''">
+      AND lkmName LIKE '%${lkmName}%'
+    </if>            
+    <if test="custName != null and custName != ''">
+      AND custName LIKE '%${custName}%'
+    </if> 
+   </where>
+   </select>
+   
+ <select id="selectVisit" parameterType="weimakeji.pojo.VisitList" resultType="weimakeji.pojo.VisitList">
+  select * from visit ,customer,user where visit.vuid=user.userid and visit.vcid=customer.cid
+   <if test="username !=null and username !=''">
+    and username like '%${username}%'
+   </if>
+    <if test="custName !=null and custName !=''">
+    and custName like '%${custName}%'
+   </if>
+    <if test="vaddress !=null and vaddress !=''">
+    and vaddress like '%${vaddress}%'
+   </if>
+    <if test="vcontent !=null and vcontent !=''">
+    and vcontent like '%${vcontent}%'
+   </if>
+    <if test="vtime !=null and vtime !=''">
+    and vtime like '%${vtime}%'
+   </if>
+ </select>
+ 
+ 
+<select id="findCountVip" resultType="int">
+select count(*) from customer where custLevel='vip客户'
+</select>
+
+<select id="findCountNewCustomer" resultType="int">
+ select count(*) from customer where custLevel='现有客户'
+</select>
+
+
+
+<select id="findCountQianZaiCustomer" resultType="int">
+select count(*) from customer where custLevel='潜在客户'
+</select>
+
+<select id="findCountLoseCustomer" resultType="int">
+  select count(*) from customer where custLevel='已失去客户'
+</select>
+
+
+
+<select id="sourceTotals2" resultType="weimakeji.pojo.CustSourceTotal">
+SELECT custSource,count(*) total FROM customer GROUP BY custSource
+</select>
+
+<select id="findAllUser" resultType="weimakeji.pojo.User">
+  select* from user
+</select>
+
+<select id="findUserById" resultType="weimakeji.pojo.User">
+  select * from user where userid=#{userid}
+</select>
+
+<update id="updateUser" parameterType="weimakeji.pojo.User">
+  update user set status=${status} where username = #{username}
+</update>
+
+<select id="findCustomerByIds" parameterType="Integer" resultType="weimakeji.pojo.Customer">
+  select * from customer where 
+   <foreach item="cid" collection="array" index="index" open="cid in("
+            separator="," close=")">
+            #{cid}
+        </foreach>
+
+</select>
+
+<select id="findCustomerLimit" resultType="weimakeji.pojo.Customer">
+select * from customer order by cid desc limit 5
+</select>
+
+<select id="findLinkManLimit" resultType="weimakeji.pojo.QueryVo">
+select * from linkman ,customer  where linkman.clid=customer.cid order by linkid desc limit 5;
+</select>
+
+<select id="findVisitLimit" resultType="weimakeji.pojo.VisitList">
+select * from visit ,customer,user where visit.vuid=user.userid and visit.vcid=customer.cid order by vid desc limit 5;
+</select>
+</mapper>
